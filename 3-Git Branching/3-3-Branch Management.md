@@ -17,3 +17,13 @@
 
 6. `git branch -D <brnach_name>`
     - 在没有合并的分支中，如果想要删除，需要加上 -D 参数
+
+## 修改分支名
+1. `git branch --move <old_branch_name> <new_branch_name>`
+    - 修改分支名
+
+2. `git push --set-upstream origin <new_branch_name>`
+    - 将修改后的名字推送到远程仓库
+
+3. `git push origin --delete <old_branch_name>`
+    - 删除旧的远方仓库
