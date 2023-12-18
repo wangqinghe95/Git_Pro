@@ -36,5 +36,7 @@ A Guideline about How to use Git
 ### Chapter-4 Git on ther Server
 + [Git 使用的网络传输协议](./4-Git%20on%20the%20Server/4-1-The%20Protocols.md)
 + [Git 服务器搭建](./4-Git%20on%20the%20Server/4-2-Getting%20Git%20on%20a%20Server.md)
++ [Git 生成 SSH 密钥](./4-Git%20on%20the%20Server/4-3-Generating%20SSH%20Public%20Key.md)
++ 
 
 
