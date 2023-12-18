@@ -5,8 +5,9 @@ Notes for Book -- [Pro Git](./progit.7z)
 A Guideline about How to use Git
 
 ## Resource
-1. [Pro Git - Git官方出版的用户手册](./progit.7z)
-2. [一个在线练习 Git Web 网站，超有用](https://learngitbranching.js.org/?locale=zh_CN)
+1. [Pro Git - Git官方出版的用户手册 pdf 版](./progit.7z)
+2. [Git Book - Git 官方出版的用户手册 online 版](https://git-scm.com/book/en/v2)
+3. [一个在线练习 Git Web 网站，超有用](https://learngitbranching.js.org/?locale=zh_CN)
 
 ## Content
 
@@ -31,3 +32,7 @@ A Guideline about How to use Git
 + [Git 分支开发工作流](./3-Git%20Branching/3-4-Branching%20Workflows.md)
 + [Git 远程分支](./3-Git%20Branching/3-5-Remote%20Branches.md)
 + [Git 变基](./3-Git%20Branching/3-6-Rebasing.md)
+
+### Chapter-4 Git on ther Server
++ [Git 使用的网络传输协议](./4-Git%20on%20the%20Server/4-1-The%20Protocols.md)
+
