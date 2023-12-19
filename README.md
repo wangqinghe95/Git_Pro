@@ -38,5 +38,6 @@ A Guideline about How to use Git
 + [Git 服务器搭建](./4-Git%20on%20the%20Server/4-2-Getting%20Git%20on%20a%20Server.md)
 + [Git 生成 SSH 密钥](./4-Git%20on%20the%20Server/4-3-Generating%20SSH%20Public%20Key.md)
 + [配置 Git 服务器](./4-Git%20on%20the%20Server/4-3-Setting%20up%20the%20Server.md)
++ [Git 守护进程](./4-Git%20on%20the%20Server/4-4-Git%20Daemon.md)
 
 
