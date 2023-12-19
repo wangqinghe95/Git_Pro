@@ -40,5 +40,8 @@ A Guideline about How to use Git
 + [配置 Git 服务器](./4-Git%20on%20the%20Server/4-3-Setting%20up%20the%20Server.md)
 + [Git 守护进程](./4-Git%20on%20the%20Server/4-4-Git%20Daemon.md)
 + [Smart HTTP](./4-Git%20on%20the%20Server/4-5-Smart%20HTTP.md)
++ [Git Web]
++ [Git Lab]
++ [第三方托管平台的选择]
 
 
