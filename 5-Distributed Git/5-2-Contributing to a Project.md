@@ -1,6 +1,6 @@
 # 向一个项目做贡献
 
-## 提交尊则
+## 提交准则
 
 1. 提交里不应该包含空白错误。
    1. 可以使用 git diff --check 检查可能的空白错误，并列出来
@@ -31,7 +31,7 @@
 - 使用悬挂式缩进
 ```
 
-### 私有小型化团队
+## 私有小型化团队
 该场景是有一两个其他开发者的私有项目。“私有”在这个上下文中，意味着闭源，不可以从外界中访问到，相关的开发者都有仓库的推送权限
 
 来看以下场景：
@@ -96,3 +96,86 @@ issue54..origin/master 是一个日志过滤器，要求 Git 只显示所有在�
 上述的顺序通常如下所示：
 
 ![一个简单的多人 Git 工作流程的通常事件顺序](../0-Resource/Picture/5-2-8.png)
+
+## 私有管理团队
+接下来介绍大型私有团队贡献者的角色，基于小组特性进行协作
+
+假设 John 和 Jessica 在一个特性中（featureA）上工作，同时 Jessica 与第三个开发者 Josie 在第二个特性（featureB）上工作。
+本例中，公司使用了一种整合-管理者工作流程，独立小组的工作只能被特定的工程师整合，主仓库的 master 分支只能被那些工程师更新。在这种情况下，所有的工作都是基于团队的分支上完成的并且稍后会被整合者拉到一起。
+
+因为 Jessica 在两个特性上工作，并且平行地与两个不同的开发者写作，那么就以她的视角开始跟随整个代码提交的流程。
+
+首先，假设 John 已经克隆了仓库，并且决定在 featureA 上工作
+1. 先创建一个 featureA 工作分支
+```
+# Jessica's Machine
+git checkout -b featureA
+```
+
+2. 修改文件，提交，推送
+`git push -u origin featureA`
+
+3. 通知其他成员
+Jessica 邮件通知 John 她推送到 featureA 的工作
+
+4. 新建一个 featureB 工作分支
+
+在等待 John 的反馈之前，再开一个分支完成 featureB 的工作。
+```
+# Jessica's Machine
+git fetch origin
+git checkout -b featureB origin/master
+```
+
+5. 在 featureB 上创建几次提交
+创建几次提交后，Jessica 的本地仓库提交记录如下：
+![Jessica 本地提交记录](../0-Resource/Picture/5-2-9.png)
+
+6. 远程新增 featureBee 分支
+
+在准备推送 featureB 的工作之前，收到了 Josie 的邮件通知，远程服务器上已经专门为 featureB 开了一个远程分支 featureBee。此时 Jessica 在推送本地提交之前，需要将远程的改动与本地合并
+
+```
+git fetch origin
+git merge origin/featureBee
+```
+
+合并且解决了可能存在的冲突之后，Jessica 想要将本地的工作推送到 featureBee 中，而不是之前的 master 分支
+`git push -u origin featureB:featureBee`
+
+推送成功
+
+7. 验证 featureA 分支
+
+此时，John 的反馈也过来了。他已经推动一些改动到 featureA 分支上，要求她验证，于是拉取，合并工作将要展开
+```
+git fetch origin
+git log featureA..origin/featureA
+```
+Jessica 抓取了最新的 featureA 分支，并且查看了 John 新的工作日志
+
+如果 Jessica 觉得没有问题的话，那么就可以将 John 的新工作合并到本地的 featureA 分支上
+```
+git checkout featureA
+git merge origin/master
+```
+
+8. feature 修改，提交
+
+Jessica 如果想要对整个合并之后的内容做一些小修改，于是她将这些修改提交到本地的 featureA 分支，然后推送到服务器
+
+推送之后，Jessica 的本地提交记录如下图所示：
+![在一个主题分支提交后 Jessica 的历史](../0-Resource/Picture/5-2-10.png)
+
+9. 最终图示
+
+Jessica、Josie、John 通知整合者服务器上的 featureA 和 featureB 分支准备好整合到主线中了。整合者将这些分支合并到主线上后，就能一次将这些新的合并提交并抓取下来，整个历史提交如下：
+![合并了 Jessica 的两个主题分支后她的分支](../0-Resource/Picture/5-2-11.png)
+
+上述的工作流程顺序图如下：
+![管理团队工流程的基本顺序](../0-Resource/Picture/5-2-12.png)
+
+## 派生的公开项目
+
+## 通过邮件的公开项目
+
