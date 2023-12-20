@@ -44,4 +44,7 @@ A Guideline about How to use Git
 + [Git Lab]
 + [第三方托管平台的选择]
 
+### chapter-5 Distributed Git
++ [分布式工作流](./5-Distributed%20Git/5-1-Distributed%20Workflows.md)
+
 
