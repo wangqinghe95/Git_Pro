@@ -177,5 +177,138 @@ Jessica、Josie、John 通知整合者服务器上的 featureA 和 featureB 分�
 
 ## 派生的公开项目
 
+向公开项目做贡献有一点不一样。因为没有权限直接更新项目的分支，贡献者必须使用其他方式通知维护者
+1. 克隆项目，为计划贡献的补丁或补丁序列创建一个主题分支
+```
+git clone <url>
+cd project
+git checkout -b featureA
+...work...
+git commit
+...work...
+git commit
+```
+
+我们可以使用 rebase -i 将多个提交压缩成一个提交，或者重排提交中的工作使补丁更容易被维护者审核
+
+2. 创建可写的派生仓库
+放分支工作完成后准备将其贡献回维护者，去原始项目中点击 Fork 按钮，创建一份自己可写的项目派生仓库。
+`git remote add myfork <url>`
+
+3. 推送
+将需要推送的工作推送到自己的仓库中
+`git push -u <my_fork> featureA`
+
+4. 通知原项目的维护者
+当对应的提交推送到自己的派生仓库中后，需要通知原项目的维护者你有他们想要合并的工作，这个动作通常被称为拉取请求。
+一般可以通过网站生成它，Github 有它自己的 Pull Request 机制，也可以运行 `git request-pull` 命令将随后的输出通过电子邮件的方式手动发送给项目维护者
+
+`git request-pull` 命令接受一个要拉取主题分支的基础分支，以及他们要拉取的 Git 的仓库，产生一个请求拉取的所有修改的摘要。
+
+例如 Jessica 想要发送 John 一个拉取请求，她刚刚在推送的分支上做两次提交，她可以运行下面的命令：
+`git reuqest-pull origin/master <my_fork>`
+
+这个输出可发送给维护者，它告诉他们工作是从哪个分支开始的，提交的摘要，已经从哪里拉取这些工作。
+
+在一个你不是维护者的项目上，通常有一个总是跟踪 origin/master 的 master 分支会很方便，在主题分支上做工作是因为如果他们被拒绝时可以很轻松的丢弃掉这些工作。
+如果同一时间主仓库移动了然后我们的本地提交不能干净的合并进去，那么使工作主题分支独立于主题分支也能够让变基这一动作共容易。
+
+假如：我们想要提供第二个特性工作到项目上，不想要继续在刚刚推送的主题分支上工作，那么从主仓库的 master 分支重新开始
+```
+git checkout -b featureB origin/master
+...work...
+git commit
+git push my_fork featureB
+git request-pull origin/master my_fork
+... email generated request pull to maintainer ...
+git fetch origin
+```
+
+现在每个特性都保存在贮藏库中，类似于补丁队列，可以重写、变基与修改，而不会让特性互相干涉或者互相依赖，例如以下：
+![featureB 的初始提交记录](../0-Resource/Picture/5-2-13.png)
+
+假如项目维护者拉取了一串其他补丁，然后尝试拉取我们的第一个分支，到那时没有干净的合并。在这种情况下，可以尝试变基那个分支到 origin/master 的顶部，为维护者解决冲突，但是重新提交你的改动：
+```
+git checkout featureA
+git rebase origin/master
+git push -f <my_fork> featureA
+```
+
+这样会重写我们的本地提交历史，下面是 featureA 工作之后的提交历史：
+![featureA 工作之后的提交记录](../0-Resource/Picture/5-2-14.png)
+
+因为分支变基了，所以必须为推送命令指定 -f 选项，这样才能将服务器上有一个不是它的后代的提交 featureA 分支替换掉。一个替代的选项是推送这个新工作到服务器上的一个不同分支（可能称作 featureAv2）
+
+下面是一个更有可能的情况：
+维护者看到了你的第二个分支上的工作并且很喜欢其中的概念，但是想要你修改一下实现的步骤。你也可以利用这次机会将工作基于项目现在的 master 分支。
+现在从 origin/master 分支开始一个新的分支，在那里压缩 featureB 的改动，解决任何冲突，改变实现，然后推送它为一个新分支。
+```
+git checkout -b featureBv2 origin/master
+git merge --squash featureB
+... change implementation ...
+git commit
+git push myfork featureBv2
+```
+
+--squash 选项接受并合并的分支上的所有工作，这将压缩至一个变更集，使仓库变成一个真正的合并并发生的状态，而不会真的生成一个合并提交。这意味着你未来的提交将会只有一个父提交，并允许你引入另一个分支的所有更改，然后再记录一个新提交前做更多的改动。同样 --no--commit 选项再默认合并过程中可以用来延迟生成合并提交。
+
+现在可以给维护者发送一条信息，表示我们已经做了要求的修改，然后他们可以在我们的本地 featureBv2 分支上找到那些改动
+![featureBv2 工作之后的提交记录](./../0-Resource/Picture/5-2-15.png)
+
 ## 通过邮件的公开项目
+
+许多项目建立了接受补丁的流程，需要检查每一个项目的特定规则，因为每个项目都不一样。下面演示一个示例：
+
+工作流程与之前的用力是类似的，你为工作的每一个补丁序列创建主题分支，区别是如何提交它们到项目中，生成每一个提交序列的电子邮件版本然后发送到开发者邮件列表，而不是派生项目然后推送到我们自己本地
+```
+git checkout -b topicA
+... work ...
+git commit 
+... work ...
+git commit
+```
+
+现在有两个提交需要发送到邮件列表。使用 `git format-patch` 来生成可以邮寄到列表的 mbox 格式的文件，它可以将每一个提交转换成一封电子邮件，提交信息的第一行作为主题，剩余信息与提交引入的补丁作为正文。
+它有一个好处是使用 foramt-patch 生成的一封电子邮件应用的提交正确地保留了所有提交信息。
+
+`git format-patch -M origin/master`
+format-pathc 命令打印处它创建地补丁文件名称。-M 开关告诉 Git 查找重命名。
+也可以编辑这些补丁文件为邮件列表添加更多不想要在提交信息中显示出来的信息。如果在 --- 行与补丁开头（diff --git 行）之间添加文本，那么开发者就可以阅读它，但是应用补丁会忽略它。
+
+Git 提供一个工具帮助用户通过 IMAP 发送正确格式化的补丁。
+1. 设置 imap 区块
+
+在 ~/.gitconfig 文件中设置 imap 区块。可以通过一些列的 git config 命令来设置每一个值，或者手动添加它们，最后的文件格式如下
+```
+[imap]
+  folder = "[Gmail]/Drafts"
+  host = imaps://imap.gmail.com
+  user = user@gmail.com
+  pass = YX]8g76G_2^sFbd
+  port = 993
+  sslverify = false
+```
+如果 IMAP 服务器不使用 SSL，最后两行可以不添加。host 的值会是 imap:// 而不是 imaps://
+
+2. 放置文件至指定文件夹
+   
+使用 `git imap-send` 将补丁序列放到特定 IMAP 服务器的 Drafts 文件夹中
+```
+cat *.patch | git imap-send
+```
+
+3. 配置邮件服务器选项
+
+使用 git config 命令设置邮件服务器选项，或者手动添加到 sendmail 模块
+```
+[sendemail]
+  smtpencryption = tls
+  smtpserver = smtp.gmail.com
+  smtpuser = user@gmail.com
+  smtpserverport = 587
+```
+
+4. 发送
+
+`git send-email *.patch`
 
