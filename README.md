@@ -47,5 +47,5 @@ A Guideline about How to use Git
 ### chapter-5 Distributed Git
 + [分布式工作流](./5-Distributed%20Git/5-1-Distributed%20Workflows.md)
 + [为一个项目提交代码的流程](./5-Distributed%20Git/5-2-Contributing%20to%20a%20Project.md)
-
++ [维护一个项目](./5-Distributed%20Git/5-3-Maintainning%20a%20Project.md)
 
